@@ -49,7 +49,7 @@ function confirmar(id) {
 
 function alugar_fetch(id) {
 
-	fetch(`http://localhost:8080/biblioteca/alugar?id=${id}`, {
+	fetch(`http://localhost:8080/biblioteca/${id}/alugar`, {
 		method: 'PUT'
 	}).then(response => {
 		if (response.status == 204 || response.status == 200) {
@@ -70,8 +70,9 @@ function confirmarAlugar(id) {
 
 function devolver_fetch(id) {
 
-	fetch(`http://localhost:8080/biblioteca/devolver?id=${id}`, {
-		method: 'PUT'
+	fetch(`http://localhost:8080/biblioteca/${id}/devolver`, {
+		method: 'PUT',
+		cache: 'no-store'
 	}).then(response => {
 		if (response.status == 204 || response.status == 200) {
 			console.log("Solicitação bem sucedida")

@@ -1,10 +1,12 @@
 package com.antonio.bibliotecavirtual.controller;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,40 +19,63 @@ import com.antonio.bibliotecavirtual.model.Biblioteca;
 import com.antonio.bibliotecavirtual.service.BibliotecaService;
 
 @RestController
-@RequestMapping(value = {"/biblioteca", "/Biblioteca"})
+@RequestMapping(value = { "/biblioteca" })
 public class BibliotecaController {
-	
-	@Autowired
-	private final BibliotecaService bibliotecaService;
 
+	private final BibliotecaService bibliotecaService;
 
 	public BibliotecaController(BibliotecaService bibliotecaService) {
 		this.bibliotecaService = bibliotecaService;
 	}
-	
+
 	@GetMapping("/livros")
-	public List<BibliotecaDTO> listarProdutos(){
-		return bibliotecaService.listarLivros();
+	public ResponseEntity<List<BibliotecaDTO>> listarProdutos() {
+		return ResponseEntity.ok(bibliotecaService.listarLivros().stream().map(x -> new BibliotecaDTO(x)).toList());
 	}
 	
+	@GetMapping("/livros/{id}")
+	public ResponseEntity<List<BibliotecaDTO>> findById(@PathVariable Long id) {
+		return ResponseEntity.ok(bibliotecaService.findById(id).stream().map(x -> new BibliotecaDTO(x)).toList());
+	}
+
 	@PostMapping("/cadastrar")
-	public void adicionar(@RequestBody Biblioteca biblioteca) {
-		bibliotecaService.adicionar(biblioteca);
+	public ResponseEntity<BibliotecaDTO> adicionar(@RequestBody Biblioteca biblioteca) {
+		Optional<Biblioteca> bibliotecaAdd = bibliotecaService.adicionar(biblioteca.getTitulo(), biblioteca.getAutor(),
+				biblioteca.getAno(), 1);
+		BibliotecaDTO dto = new BibliotecaDTO(bibliotecaAdd.get());
+		if (bibliotecaAdd.isPresent()) {
+			return ResponseEntity.ok(dto);
+		} else {
+			return ResponseEntity.badRequest().build();
+		}
 	}
-	
-	@PutMapping("/alugar")
-	public void alugar(@RequestParam Long id) {
-		
-		bibliotecaService.alugar(id);
+
+	@PutMapping("/{id}/alugar")
+	public ResponseEntity<BibliotecaDTO> alugar(@PathVariable Long id) {
+		Optional<Biblioteca> biblioteca = bibliotecaService.findById(id);
+
+		if (biblioteca.isPresent()) {
+			bibliotecaService.alugar(id);
+			return ResponseEntity.noContent().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
-	
-	@PutMapping("/devolver")
-	public void devolver(@RequestParam Long id) {
-		bibliotecaService.devolver(id);
+
+	@PutMapping("/{id}/devolver")
+	public ResponseEntity<BibliotecaDTO> devolver(@PathVariable Long id) {
+		Optional<Biblioteca> biblioteca = bibliotecaService.findById(id);
+
+		if (biblioteca.isPresent()) {
+			bibliotecaService.devolver(id);
+			return ResponseEntity.noContent().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
-	
+
 	@DeleteMapping("/remover")
-	public void deletarLivro(Long id) {
+	public void deletarLivro(@RequestParam Long id) {
 		bibliotecaService.deletarLivro(id);
 	}
 
