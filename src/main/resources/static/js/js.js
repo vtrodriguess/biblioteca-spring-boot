@@ -7,7 +7,7 @@ function adicionar_fetch() {
 	}
 
 
-	fetch('http://localhost:8080/biblioteca/inserir', {
+	fetch('http://localhost:8080/biblioteca/cadastrar', {
 		method: 'POST',
 		headers: {
 			"Content-Type": "application/json"

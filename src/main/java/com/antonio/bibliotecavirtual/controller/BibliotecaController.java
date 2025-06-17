@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.antonio.bibliotecavirtual.dto.BibliotecaDTO;
 import com.antonio.bibliotecavirtual.model.Biblioteca;
 import com.antonio.bibliotecavirtual.service.BibliotecaService;
 
@@ -28,11 +29,11 @@ public class BibliotecaController {
 	}
 	
 	@GetMapping("/livros")
-	public List<Biblioteca> listarProdutos(){
+	public List<BibliotecaDTO> listarProdutos(){
 		return bibliotecaService.listarLivros();
 	}
 	
-	@PostMapping("/inserir")
+	@PostMapping("/cadastrar")
 	public void adicionar(@RequestBody Biblioteca biblioteca) {
 		bibliotecaService.adicionar(biblioteca);
 	}
