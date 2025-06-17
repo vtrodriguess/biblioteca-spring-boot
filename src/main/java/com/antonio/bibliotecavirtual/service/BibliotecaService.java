@@ -27,11 +27,15 @@ public class BibliotecaService {
 		bibliotecaRepository.save(biblioteca);
 	}
 	
-	public void alugar(Biblioteca biblioteca) {
+	public void alugar(Long id) {
+		Biblioteca biblioteca = bibliotecaRepository.findById(id).get();
+		biblioteca.setDisponivel(0);
 		bibliotecaRepository.save(biblioteca);
 	}
 	
-	public void devolver(Biblioteca biblioteca) {
+	public void devolver(Long id) {
+		Biblioteca biblioteca = bibliotecaRepository.findById(id).get();
+		biblioteca.setDisponivel(1);
 		bibliotecaRepository.save(biblioteca);
 	}
 	

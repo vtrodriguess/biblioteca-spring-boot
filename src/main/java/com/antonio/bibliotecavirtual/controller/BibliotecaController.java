@@ -39,20 +39,13 @@ public class BibliotecaController {
 	
 	@PutMapping("/alugar")
 	public void alugar(@RequestParam Long id) {
-		Biblioteca biblioteca = new Biblioteca();
-		biblioteca.setDisponivel(0);
-		biblioteca.setId(id);
 		
-		bibliotecaService.alugar(biblioteca);
+		bibliotecaService.alugar(id);
 	}
 	
 	@PutMapping("/devolver")
 	public void devolver(@RequestParam Long id) {
-		Biblioteca biblioteca = new Biblioteca();
-		biblioteca.setDisponivel(1);
-		biblioteca.setId(id);
-		
-		bibliotecaService.devolver(biblioteca);
+		bibliotecaService.devolver(id);
 	}
 	
 	@DeleteMapping("/remover")
